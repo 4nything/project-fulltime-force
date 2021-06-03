@@ -1,24 +1,37 @@
 import createError from 'http-errors';
 import express, { json, urlencoded } from 'express';
-import { join } from 'path';
-import cookieParser from 'cookie-parser';
+import path from 'path';
 import morgan from 'morgan';
 
 import indexRouter from './routes/index';
 
 var app = express();
 
-// view engine setup
+// view engine setup and set port
 app.set('port', 3000)
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 app.use(morgan('dev'));
 app.use(json());
 
-app.use('/api', indexRouter);
+app.use('/api/commits', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
+  res.format({
+    html: function (){
+      res.render('404', { url: req.url });
+    },
+    json: function(){
+      res.json({ error: 'Not Found'})
+    },
+    default: function(){
+      res.type('txt').send('Not Found');
+    }
+  })
+  
 });
 
 // error handler
