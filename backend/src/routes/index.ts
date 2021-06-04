@@ -12,32 +12,68 @@ const options = {
     }
 }
 
-var Answer: string = '';
-
 const req = https.request(options, res => {
     console.log(`statusCode: ${res.statusCode}`)
-    let body: any[] = [];
+    let api_body: any[] = [];
+    let api_answer: string = '';
+    let statusCode: number;
 
     res.on('data', (d) => {
-      body.push(d);
-      Answer = Buffer.concat(body).toString();
+      statusCode = 200;
+      api_body.push(d);
+      api_answer = Buffer.concat(api_body).toString();
     }).on('end', () => {
-      showAnswer(Answer);
+      showAnswer(api_answer, statusCode);
     })
 })
 
 req.on('error', error => {
     console.error(error)
+    showAnswer(null, 0);
 })
 
 req.end()
 var router = Router();
 /* GET home page. */
 
-function showAnswer(answer: any){
-  let answerJson = JSON.parse(answer);
+function showAnswer(answer_api: any, status_code: number){
+  let answerJson = JSON.parse(answer_api);
   router.route('/')
-  .get((requ, resp) => resp.send(answerJson));
+  .get((req, res) => {
+    let answer = {
+      status: '',
+      code: 0,
+      message: '',
+      data: {}
+    };
+    if (res.statusCode === 200){
+      if (status_code === 200){
+        answer = {
+          status: 'success',
+          code: status_code,
+          message: 'Successful Request',
+          data: answerJson
+        }
+      }else{
+        answer = {
+          status: 'Github error',
+          code: status_code,
+          message: 'Error at retrieving data from GitHub',
+          data: {}
+        }
+      };
+      res.send(answer);
+    }else{
+      answer = {
+        status: 'Service error',
+        code: res.statusCode,
+        message: res.statusMessage,
+        data: {}
+      }
+      res.send(answer);
+    }
+    
+  });
 }
 
 export default router;
