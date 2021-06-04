@@ -1,12 +1,18 @@
+<div *ngIf='showSpinner' class="full-screen">
+    <mat-spinner></mat-spinner>
+</div>
 <mat-grid-list cols="3" rowHeight='1:1'>
     <mat-grid-tile *ngFor="let commit of dataCommits">
-        <mat-card>
-            <mat-card-title>
-                <h3>Commit #{{commit.sha}}</h3>
-                <h5>Author: {{commit.author.name}}</h5>
-                <h5>Message: '{{commit.message}}'</h5>
-                <h5>Date: {{commit.author.date | date:'yyyy-dd-MM'}}</h5>
-            </mat-card-title>
-        </mat-card>
+        <a href="https://www.github.com/4nything/project-fulltime-force/commit/{{commit.sha}}" target="_blank" class="full-screen">
+            <mat-card class="mat-elevation-z2 card-commit">
+                <h1>Commit</h1> <br><h3>#{{commit.sha}}</h3>
+                <h5 *ngIf='commit.commit.author'>Author: {{commit.commit.author.name}}</h5>
+                <h5 *ngIf='commit.commit.commiter'>Commiter: {{commit.commit.commiter.name}}</h5>
+                <h5>Message: {{commit.commit.message}}</h5>
+                <h5 *ngIf='commit.commit.committer'>Date: {{commit.commit.committer.date | date: 'yyyy-MM-dd'}}</h5>
+                <h2>Click me to see the changes!</h2>
+                <div class="overlay"></div>
+            </mat-card>
+        </a>
     </mat-grid-tile>
 </mat-grid-list>
