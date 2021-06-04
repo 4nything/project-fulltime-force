@@ -4,14 +4,14 @@ import { Injectable } from "@angular/core";
 @Injectable(
     { providedIn: 'root' }
 ) 
-export class CommitsService { 
-    private HOSTNAME: string = 'localhost:3000'; 
+export class GitHubService { 
+    private HOSTNAME: string = 'http://localhost:3000'; 
     private APIURL: string = '/api/commits'; 
     
     constructor(private _httpClient: HttpClient) { } 
     
-    commits_request(): Observable<JSON> { 
+    commits_request(): Observable<any> { 
         let full_url = this.HOSTNAME + this.APIURL; 
-        return this._httpClient.get<JSON>(full_url) 
+        return this._httpClient.get<any>(full_url) 
     } 
 }

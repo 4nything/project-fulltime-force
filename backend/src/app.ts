@@ -2,11 +2,14 @@ import createError from 'http-errors';
 import express, { json, urlencoded } from 'express';
 import path from 'path';
 import morgan from 'morgan';
-
+import cors from 'cors';
+import bodyparser from 'body-parser';
 import indexRouter from './routes/index';
 
 var app = express();
 
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({extended: false}))
 // view engine setup and set port
 app.set('port', 3000)
 app.set('views', path.join(__dirname, 'views'));
@@ -15,6 +18,9 @@ app.set('view engine', 'ejs');
 app.use(morgan('dev'));
 app.use(json());
 
+app.use(cors())
+app.use('/app', express.static('/dist'));
+app.listen(4200)
 app.use('/api/commits', indexRouter);
 
 // catch 404 and forward to error handler

@@ -14,6 +14,7 @@
     "morgan": "~1.9.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.10",
     "@types/http-errors": "^1.8.0"
   }
 }
